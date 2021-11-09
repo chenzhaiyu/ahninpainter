@@ -6,7 +6,7 @@ import ssl
 import urllib
 
 
-def download(save_dir='./', tiles_path='./tilenames.txt', url_base='https://ns_hwh.fundaments.nl/hwh-ahn/ahn4/01_LAZ/'):
+def download_ahn(save_dir='./', tiles_path='conf/tilenames.txt', url_base='https://ns_hwh.fundaments.nl/hwh-ahn/ahn4/01_LAZ/'):
     """
     Download AHN4 point clouds.
     :param url_base: remote url base
@@ -48,4 +48,4 @@ def download(save_dir='./', tiles_path='./tilenames.txt', url_base='https://ns_h
 
 
 if __name__ == '__main__':
-    download(save_dir='./')
+    download_ahn(save_dir='./')
