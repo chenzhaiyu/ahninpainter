@@ -92,6 +92,3 @@ def glob_tile_ids(pattern):
     tile_ids = glob.glob(pattern)
     return [Path(i).stem for i in tile_ids]
 
-
-if __name__ == '__main__':
-    pass

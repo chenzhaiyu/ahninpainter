@@ -22,7 +22,7 @@ def run(args):
     input_dir = Path(cfg.split.input_dir)
     output_dir = Path(cfg.split.output_dir)
 
-    tile = input_path.parent.stem
+    tile = int(input_path.parent.stem)
 
     image = gdal.Open(str(input_path))
     has_nodata, _ = nodata(image)
