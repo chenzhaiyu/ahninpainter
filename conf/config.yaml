@@ -26,3 +26,7 @@ mask:
   input_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all'
   output_dir: '/Users/zhaiyu/Datasets/temp'
   threads: 8
+
+clean:
+  input_dir: '/Users/zhaiyu/Downloads/1062_tif'
+  threads: 8
