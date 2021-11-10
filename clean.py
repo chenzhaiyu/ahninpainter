@@ -19,8 +19,7 @@ def clean_image(path):
     :return: None
     """
     image = gdal.Open(str(path))
-    raster_count = image.RasterCount
-    if raster_count <= 1:
+    if image.RasterXSize == 1 and image.RasterYSize == 1:
         try:
             os.remove(path)
             print('removed file:', path)
