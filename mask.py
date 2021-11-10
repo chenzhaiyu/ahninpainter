@@ -4,6 +4,8 @@ from pathlib import Path
 from tqdm import tqdm
 from PIL import Image
 from osgeo import gdal
+import hydra
+from omegaconf import DictConfig
 
 from utils import nodata
 
@@ -21,28 +23,27 @@ def extract_mask(args):
         Image.fromarray(mask_nodata).save(path_out)
 
 
-def multi_run(data_dir, save_dir, threads=0):
+@hydra.main(config_path='conf', config_name='config')
+def multi_run(cfg: DictConfig):
     """
     Extract masks from no-data images with multi-processing.
     :return: None
     """
-    input_dir = Path(data_dir)
-    save_dir = Path(save_dir)
+    input_dir = Path(cfg.mask.input_dir)
+    output_dir = Path(cfg.mask.output_dir)
     input_paths = input_dir.rglob('*' + 'tif')
 
     args = []
     for path_in in input_paths:
-        path_out = save_dir / path_in.relative_to(data_dir).with_suffix('.jpg')
+        path_out = output_dir / path_in.relative_to(input_dir).with_suffix('.jpg')
         path_out.parent.mkdir(exist_ok=True, parents=True)
         args.append((path_in, path_out))
 
-    pool = multiprocessing.Pool(processes=threads if threads else multiprocessing.cpu_count())
+    pool = multiprocessing.Pool(processes=cfg.mask.threads if cfg.mask.threads else multiprocessing.cpu_count())
     # https://stackoverflow.com/a/40133278
     for _ in tqdm(pool.imap_unordered(extract_mask, args), total=len(args)):
         pass
 
 
 if __name__ == '__main__':
-    multi_run(data_dir='/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all',
-              save_dir='/Users/zhaiyu/Datasets/temp',
-              threads=0)
+    multi_run()
