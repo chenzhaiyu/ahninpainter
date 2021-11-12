@@ -35,7 +35,7 @@ def multi_run(cfg: DictConfig):
 
     args = []
     for path_in in input_paths:
-        path_out = output_dir / path_in.relative_to(input_dir).with_suffix('.jpg')
+        path_out = output_dir / path_in.relative_to(input_dir).with_suffix('.tif')  # tif is sharp; do not use jpg
         path_out.parent.mkdir(exist_ok=True, parents=True)
         args.append((path_in, path_out))
 

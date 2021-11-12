@@ -21,7 +21,7 @@ def nodata(image):
     value = band.GetNoDataValue()
     array = band.ReadAsArray()
     has_nodata = value in array
-    mask_nodata = np.zeros(array.shape)
+    mask_nodata = np.zeros(array.shape, dtype=bool)
     if has_nodata:
         mask_nodata = value != array
     return has_nodata, mask_nodata
