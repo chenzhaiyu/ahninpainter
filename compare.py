@@ -27,6 +27,10 @@ def difference(path_reference, path_target):
     reference = gdal.Open(str(path_reference))
     target = gdal.Open(str(path_target))
 
+    if reference.RasterCount == 1 or target.RasterCount == 1:
+        # empty tif
+        return np.array([0])
+
     # they should have identical dimension to compare
     assert reference.RasterXSize == target.RasterXSize and \
            reference.RasterYSize == target.RasterYSize
@@ -101,10 +105,22 @@ def multi_run(cfg: DictConfig):
         args.append((path_reference, path_target, cfg.compare.metrics))
 
     pool = multiprocessing.Pool(processes=cfg.compare.threads if cfg.compare.threads else multiprocessing.cpu_count())
+
+    counter = 0
     # https://stackoverflow.com/a/40133278
     for c, filepath in tqdm(pool.imap_unordered(compare, args), total=len(args)):
         if True in c.values():
+            counter += 1
             log.info(str(c) + str(filepath))
+    log.info(f' {counter} / {len(args)} has changed')
+
+    # fallback to single-thread
+    # for arg in args:
+    #     c, filepath = compare(arg)
+    #     if True in c.values():
+    #         counter += 1
+    #         log.info(str(c) + str(filepath))
+    # log.info(f' {counter} / {len(args)} has changed')
 
 
 if __name__ == '__main__':
