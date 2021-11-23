@@ -39,7 +39,7 @@ def difference(path_reference, path_target):
     band_reference = reference.GetRasterBand(1)
     array_reference = band_reference.ReadAsArray()
 
-    band_target = reference.GetRasterBand(1)
+    band_target = target.GetRasterBand(1)
     array_target = band_target.ReadAsArray()
 
     nodata_reference = band_reference.GetNoDataValue()
