@@ -28,5 +28,16 @@ mask:
   threads: 8
 
 clean:
-  input_dir: '/Users/zhaiyu/Downloads/1062_tif'
+  input_dir: '/Users/zhaiyu/Downloads/1'
   threads: 8
+
+compare:
+  reference_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4ams/tif_all'
+  target_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4ams/tif_all'
+  threads: 8
+  metrics:
+    mean: 0.5
+    maxima: 1.0
+    sum: 5
+    count_larger_than: [0.5, 10]  # [larger_than_what, threshold]
+    percentage_larger_than: [0.5, 0.1]  # [larger_than_what, threshold]

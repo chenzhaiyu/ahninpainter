@@ -31,7 +31,7 @@ def convert_image(input_path, output_path, suffix='.jpg', backend='gdal', n_chan
                   min_value=None, max_value=None, exclude_nodata=False, mode='I;16'):
     """
     Convert images to a specified format.
-    :param mode: image mode if as greyscale
+    :param mode: image mode if as greyscale, support backend pillow only
     :param input_path: path to input image
     :param output_path: path to output image
     :param suffix: 'jpg'
