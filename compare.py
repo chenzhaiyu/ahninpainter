@@ -27,7 +27,8 @@ def difference(path_reference, path_target):
     reference = gdal.Open(str(path_reference))
     target = gdal.Open(str(path_target))
 
-    if reference.RasterCount == 1 or target.RasterCount == 1:
+    if (reference.RasterXSize == 1 and reference.RasterYSize == 1) or \
+            (target.RasterXSize == 1 and target.RasterYSize == 1):
         # empty tif
         return np.array([0])
 
