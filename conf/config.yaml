@@ -32,12 +32,15 @@ clean:
   threads: 8
 
 compare:
-  reference_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4ams/tif_all'
-  target_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4ams/tif_all'
+  reference_dir: '/Users/zhaiyu/Downloads/ahn3_50cm'
+  target_dir: '/Users/zhaiyu/Downloads/ahn4_50cm'
+  save_dir: '/Users/zhaiyu/Downloads/changed'
   threads: 8
+  verbose: true
   metrics:
-    mean: 0.5
-    maxima: 1.0
-    sum: 5
-    count_larger_than: [0.5, 10]  # [larger_than_what, threshold]
-    percentage_larger_than: [0.5, 0.1]  # [larger_than_what, threshold]
+    mean: 2.0
+#    maxima: 20.0
+#    sum: 1500.0
+#    count_larger_than: [5, 100]  # [larger_than_what, threshold]
+    percentage_larger_than: [5, 0.20]  # [larger_than_what, threshold]
+
