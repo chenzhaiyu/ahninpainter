@@ -1,0 +1,6 @@
+input_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all'
+output_dir: '/Users/zhaiyu/Datasets/temp'
+suffix: '.tif'
+train: []  # remaining tiles from validation if empty
+val: [5907, 5908, 5909, 5910, 6211, 6212, 6213, 6214, 6307, 6308, 6309, 6310, 7199, 7200, 7201, 7202]
+test: null  # all buildings with no-data pixels

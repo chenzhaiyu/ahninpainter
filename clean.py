@@ -36,7 +36,7 @@ def multi_run(cfg: DictConfig):
     input_dir = Path(cfg.clean.input_dir)
     input_paths = list(input_dir.rglob('*' + 'tif'))
 
-    pool = multiprocessing.Pool(processes=cfg.mask.threads if cfg.mask.threads else multiprocessing.cpu_count())
+    pool = multiprocessing.Pool(processes=cfg.threads if cfg.threads else multiprocessing.cpu_count())
     # https://stackoverflow.com/a/40133278
     for _ in tqdm(pool.imap_unordered(clean_image, input_paths), total=len(input_paths)):
         pass

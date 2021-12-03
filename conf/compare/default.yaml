@@ -1,0 +1,10 @@
+reference_dir: '/Users/zhaiyu/Downloads/ahn3_50cm'
+target_dir: '/Users/zhaiyu/Downloads/ahn4_50cm'
+save_dir: '/Users/zhaiyu/Downloads/changed'
+verbose: true
+metrics:
+  mean: 2.0
+#    maxima: 20.0
+#    sum: 1500.0
+#    count_larger_than: [5, 100]  # [larger_than_what, threshold]
+  percentage_larger_than: [3, 0.10]  # [larger_than_what, threshold]

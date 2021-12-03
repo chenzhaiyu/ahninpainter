@@ -1,46 +1,10 @@
 defaults:
+  - device: macbook
+  - clean: default
+  - compare: default
+  - download: [db, ahn]
+  - mask: default
+  - split: default
+
   - override hydra/job_logging: colorlog
   - override hydra/hydra_logging: colorlog
-
-db:
-  host: 'localhost'
-  port: 5432
-  name: 'baseregisters'
-  ahn_table: 'ahn3'
-  bag_table: 'bag3d_v21031_7425c21b'
-
-download:
-  url_base: 'https://ns_hwh.fundaments.nl/hwh-ahn/ahn4/01_LAZ/'
-  tilenames: 'conf/tilenames.txt'
-
-split:
-  input_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all'
-  output_dir: '/Users/zhaiyu/Datasets/temp'
-  suffix: '.tif'
-  train: []  # remaining tiles from validation if empty
-  val: [5907, 5908, 5909, 5910, 6211, 6212, 6213, 6214, 6307, 6308, 6309, 6310, 7199, 7200, 7201, 7202]
-  test: null  # all buildings with no-data pixels
-  threads: 8
-
-mask:
-  input_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all'
-  output_dir: '/Users/zhaiyu/Datasets/temp'
-  threads: 8
-
-clean:
-  input_dir: '/Users/zhaiyu/Downloads/1'
-  threads: 8
-
-compare:
-  reference_dir: '/Users/zhaiyu/Downloads/ahn3_50cm'
-  target_dir: '/Users/zhaiyu/Downloads/ahn4_50cm'
-  save_dir: '/Users/zhaiyu/Downloads/changed'
-  threads: 8
-  verbose: true
-  metrics:
-    mean: 2.0
-#    maxima: 20.0
-#    sum: 1500.0
-#    count_larger_than: [5, 100]  # [larger_than_what, threshold]
-    percentage_larger_than: [5, 0.20]  # [larger_than_what, threshold]
-

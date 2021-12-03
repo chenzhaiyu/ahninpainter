@@ -80,7 +80,7 @@ def changed(difference_array, **kwargs):
     return changed_
 
 
-def copy_file(path_reference, path_target, reference_dir, target_dir, save_dir):
+def copy_tif(path_reference, path_target, reference_dir, target_dir, save_dir):
     """
     Copy reference and target to specified dir if they are changed.
     :return: None
@@ -114,7 +114,7 @@ def compare(args):
     changed_ = changed(difference_array, **metrics)
 
     if True in changed_.values():
-        copy_file(path_reference, path_target, reference_dir, target_dir, save_dir)
+        copy_tif(path_reference, path_target, reference_dir, target_dir, save_dir)
         return changed_, path_reference
 
 
@@ -134,7 +134,7 @@ def multi_run(cfg: DictConfig):
         args.append((path_reference, path_target, cfg.compare.reference_dir, cfg.compare.target_dir,
                      cfg.compare.save_dir, cfg.compare.metrics))
 
-    pool = multiprocessing.Pool(processes=cfg.compare.threads if cfg.compare.threads else multiprocessing.cpu_count())
+    pool = multiprocessing.Pool(processes=cfg.threads if cfg.threads else multiprocessing.cpu_count())
 
     # https://stackoverflow.com/a/40133278
     counter = 0

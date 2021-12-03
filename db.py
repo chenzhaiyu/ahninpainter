@@ -15,9 +15,9 @@ from shapely import wkt as wkt_func
 from shapely.geometry import mapping
 from tqdm import tqdm
 from itertools import chain
-from logger import attach_to_log
+import logging
 
-logger = attach_to_log()
+logger = logging.getLogger(__name__)
 
 # debug mode processes only a fraction of files
 # set False to process entire data

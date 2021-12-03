@@ -39,7 +39,7 @@ def multi_run(cfg: DictConfig):
         path_out.parent.mkdir(exist_ok=True, parents=True)
         args.append((path_in, path_out))
 
-    pool = multiprocessing.Pool(processes=cfg.mask.threads if cfg.mask.threads else multiprocessing.cpu_count())
+    pool = multiprocessing.Pool(processes=cfg.threads if cfg.threads else multiprocessing.cpu_count())
     # https://stackoverflow.com/a/40133278
     for _ in tqdm(pool.imap_unordered(extract_mask, args), total=len(args)):
         pass
