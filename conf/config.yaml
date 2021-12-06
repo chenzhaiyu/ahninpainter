@@ -1,10 +1,11 @@
 defaults:
-  - device: macbook
   - clean: default
   - compare: default
   - download: [db, ahn]
   - mask: default
   - split: default
+  
+  - device: macbook
 
   - override hydra/job_logging: colorlog
   - override hydra/hydra_logging: colorlog
