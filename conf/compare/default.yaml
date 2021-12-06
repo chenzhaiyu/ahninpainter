@@ -1,7 +1,13 @@
-reference_dir: '/Users/zhaiyu/Downloads/ahn3_50cm'
-target_dir: '/Users/zhaiyu/Downloads/ahn4_50cm'
-save_dir: '/Users/zhaiyu/Downloads/changed'
-verbose: true
+_target_: compare.RasterComparison
+
+reference_tif_dir: '/Users/zhaiyu/Downloads/tif/ahn3'
+target_tif_dir: '/Users/zhaiyu/Downloads/tif/ahn4'
+save_tif_dir: '/Users/zhaiyu/Downloads/tif/changed'
+
+reference_las_dir: '/Users/zhaiyu/Downloads/las/ahn3'
+target_las_dir: '/Users/zhaiyu/Downloads/las/ahn4'
+save_las_dir: '/Users/zhaiyu/Downloads/las/changed'
+
 metrics:
   mean: 2.0
 #    maxima: 20.0
