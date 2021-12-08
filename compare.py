@@ -29,6 +29,9 @@ class RasterComparison:
 
         self.metrics = kwargs['metrics']
 
+        self.copy_tif = kwargs['copy_tif']
+        self.copy_las = kwargs['copy_las']
+
     @staticmethod
     def difference(path_reference, path_target):
         """
@@ -39,7 +42,10 @@ class RasterComparison:
         :return: difference
         """
         reference = gdal.Open(str(path_reference))
-        target = gdal.Open(str(path_target))
+        if path_target.is_file():
+            target = gdal.Open(str(path_target))
+        else:
+            return None
 
         if (reference.RasterXSize == 1 and reference.RasterYSize == 1) or \
                 (target.RasterXSize == 1 and target.RasterYSize == 1):
@@ -74,6 +80,8 @@ class RasterComparison:
         :return: True/False
         """
         changed_ = {}
+        if difference_array is None:
+            return None
         if 'mean' in self.metrics:
             mean = np.mean(difference_array)
             changed_['mean'] = True if mean > self.metrics['mean'] else False
@@ -125,6 +133,10 @@ class RasterComparison:
         except PermissionError:
             log.error('Permission denied.')
 
+    @staticmethod
+    def path_to_identification():
+        pass
+
     def compare(self, args):
         """
         Compare reference and target.
@@ -135,11 +147,18 @@ class RasterComparison:
         difference_array = self.difference(path_reference, path_target)
         changed_ = self.changed(difference_array)
 
-        if True in changed_.values():
-            self.copy_file(path_reference, path_target, filetype='tif')
-            self.copy_file(path_reference, path_target, filetype='las')
+        if changed_ is None:
+            return -1, None, path_reference
 
-            return changed_, path_reference
+        elif True in changed_.values():
+            if self.copy_tif:
+                self.copy_file(path_reference, path_target, filetype='tif')
+            if self.copy_las:
+                self.copy_file(path_reference, path_target, filetype='las')
+            return 1, changed_, path_reference
+
+        else:
+            return 0, None, path_reference
 
 
 @hydra.main(config_path='conf', config_name='config')
@@ -165,9 +184,12 @@ def multi_run(cfg: DictConfig):
     # https://stackoverflow.com/a/40133278
     counter = 0
     for r in tqdm(pool.imap_unordered(raster_comparison.compare, args), total=len(args)):
-        if r is not None:
+        if r[0] == -1:
+            log.warning(f'Non-existing target for reference: {r[-1]}')
             counter += 1
-            log.debug(str(r[0]) + ' for ' + str(r[1]))
+        elif r[0] == 1:
+            log.debug(f'Changed {r[1]} for reference: {r[-1]}')
+            counter += 1
     log.info(f' {counter} / {len(args)} has changed.')
 
 

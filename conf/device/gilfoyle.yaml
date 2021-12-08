@@ -2,10 +2,10 @@
 threads: 100
 
 compare:
-  reference_tif_dir: '/data/work/rypeters/ahn34_compare/raster/ahn3_50cm/tif'
-  target_tif_dir: '/data/work/rypeters/ahn34_compare/raster/ahn4_50cm/tif'
-  save_tif_dir: '/data/work/rypeters/ahn34_compare/raster/changed'
+  reference_tif_dir: '/data/work/zhaiyu/ahn3_per_building/tif'
+  target_tif_dir: '/data/work/zhaiyu/ahn4_per_building/tif'
+  save_tif_dir: '/data/work/zhaiyu/changed'
 
-  reference_las_dir: '/data/work/rypeters/ahn34_compare/raster/ahn3_50cm/las'
-  target_las_dir: '/data/work/rypeters/ahn34_compare/raster/ahn4_50cm/las'
-  save_las_dir: '/data/work/rypeters/ahn34_compare/raster/changed'
+  reference_las_dir: '/data/work/zhaiyu/ahn3_per_building/las'
+  target_las_dir: '/data/work/zhaiyu/ahn4_per_building/las'
+  save_las_dir: '/data/work/zhaiyu/changed'

@@ -1,16 +1,19 @@
 _target_: compare.RasterComparison
 
-reference_tif_dir: '/Users/zhaiyu/Downloads/tif/ahn3'
-target_tif_dir: '/Users/zhaiyu/Downloads/tif/ahn4'
-save_tif_dir: '/Users/zhaiyu/Downloads/tif/changed'
+reference_tif_dir: '/Users/zhaiyu/Workspace/change_detection/tif/ahn3'
+target_tif_dir: '/Users/zhaiyu/Workspace/change_detection/tif/ahn4'
+save_tif_dir: '/Users/zhaiyu/Workspace/change_detection/changed'
 
-reference_las_dir: '/Users/zhaiyu/Downloads/las/ahn3'
-target_las_dir: '/Users/zhaiyu/Downloads/las/ahn4'
-save_las_dir: '/Users/zhaiyu/Downloads/las/changed'
+reference_las_dir: '/Users/zhaiyu/Workspace/change_detection/las/ahn3'
+target_las_dir: '/Users/zhaiyu/Workspace/change_detection/las/ahn4'
+save_las_dir: '/Users/zhaiyu/Workspace/change_detection/changed'
+
+copy_tif: true
+copy_las: true
 
 metrics:
-  mean: 2.0
+#    mean: 2.0
 #    maxima: 20.0
 #    sum: 1500.0
 #    count_larger_than: [5, 100]  # [larger_than_what, threshold]
-  percentage_larger_than: [3, 0.10]  # [larger_than_what, threshold]
+  percentage_larger_than: [3, 0.20]  # [larger_than_what, threshold]

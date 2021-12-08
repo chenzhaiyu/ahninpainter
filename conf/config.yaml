@@ -4,7 +4,7 @@ defaults:
   - download: [db, ahn]
   - mask: default
   - split: default
-  
+
   - device: macbook
 
   - override hydra/job_logging: colorlog
