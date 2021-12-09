@@ -133,10 +133,6 @@ class RasterComparison:
         except PermissionError:
             log.error('Permission denied.')
 
-    @staticmethod
-    def path_to_identification():
-        pass
-
     def compare(self, args):
         """
         Compare reference and target.
@@ -148,17 +144,17 @@ class RasterComparison:
         changed_ = self.changed(difference_array)
 
         if changed_ is None:
-            return -1, None, path_reference
+            return -1, None, path_reference.stem
 
         elif True in changed_.values():
             if self.copy_tif:
                 self.copy_file(path_reference, path_target, filetype='tif')
             if self.copy_las:
                 self.copy_file(path_reference, path_target, filetype='las')
-            return 1, changed_, path_reference
+            return 1, changed_, path_reference.stem
 
         else:
-            return 0, None, path_reference
+            return 0, None, path_reference.stem
 
 
 @hydra.main(config_path='conf', config_name='config')
@@ -183,14 +179,22 @@ def multi_run(cfg: DictConfig):
 
     # https://stackoverflow.com/a/40133278
     counter = 0
-    for r in tqdm(pool.imap_unordered(raster_comparison.compare, args), total=len(args)):
-        if r[0] == -1:
-            log.warning(f'Non-existing target for reference: {r[-1]}')
-            counter += 1
-        elif r[0] == 1:
-            log.debug(f'Changed {r[1]} for reference: {r[-1]}')
-            counter += 1
-    log.info(f' {counter} / {len(args)} has changed.')
+    with open('changed.txt', 'w') as file_changed:
+        for r in tqdm(pool.imap_unordered(raster_comparison.compare, args), total=len(args)):
+            if r[0] == -1:
+                log.warning(f'Non-existing target: {r[-1]}')
+                counter += 1
+            elif r[0] == 1:
+                log.debug(f'Changed {r[1]}: {r[-1]}')
+                file_changed.write(r[-1])
+                file_changed.write('\n')
+                counter += 1
+            elif r[0] == 0:
+                log.debug(f'Unchanged {r[1]}: {r[-1]}')
+            else:
+                log.error(f'Unexpected error: {r[-1]}')
+                raise ValueError
+        log.info(f' {counter} / {len(args)} has changed.')
 
 
 if __name__ == '__main__':
