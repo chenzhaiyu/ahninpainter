@@ -183,7 +183,6 @@ def multi_run(cfg: DictConfig):
         for r in tqdm(pool.imap_unordered(raster_comparison.compare, args), total=len(args)):
             if r[0] == -1:
                 log.warning(f'Non-existing target: {r[-1]}')
-                counter += 1
             elif r[0] == 1:
                 log.debug(f'Changed {r[1]}: {r[-1]}')
                 file_changed.write(r[-1])

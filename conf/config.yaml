@@ -4,6 +4,7 @@ defaults:
   - download: [db, ahn]
   - mask: default
   - split: default
+  - merge: default
 
   - device: macbook
 
