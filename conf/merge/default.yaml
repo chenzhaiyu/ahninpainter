@@ -2,6 +2,7 @@ _target_: merge.CityModelMerger
 
 data_dir: '/Users/zhaiyu/Workspace/inpaint-utils/data/merge'
 temp_dir: '/Users/zhaiyu/Workspace/inpaint-utils/data/temp'
+output_dir: '/Users/zhaiyu/Workspace/inpaint-utils/data/output'
 
 prefix_ahn4: 'ahn4_'
 prefix_ahn34: 'ahn34_'
