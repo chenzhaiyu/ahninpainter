@@ -62,21 +62,21 @@ class CityModelMerger:
 
         if self.do_suppress_cjio:
             subprocess.run([
-                f"cjio {path_cj_a} subset --exclude $(cat {self.changed_temp}) save " +
+                f"cjio {path_cj_a} subset $(cat {self.changed_temp}) save " +
                 f"{self.temp_dir}/{path_cj_a.stem}.subset.json"],
                 shell=True, stdout=subprocess.DEVNULL)
             subprocess.run([
-                f"cjio {path_cj_b} subset  $(cat {self.changed_temp}) save " +
+                f"cjio {path_cj_b} subset --exclude $(cat {self.changed_temp}) save " +
                 f"{self.temp_dir}/{path_cj_b.stem}.subset.json"],
                 shell=True, stdout=subprocess.DEVNULL)
 
         else:
             subprocess.run([
-                f"cjio {path_cj_a} subset --exclude $(cat {self.changed_temp}) save " +
+                f"cjio {path_cj_a} subset $(cat {self.changed_temp}) save " +
                 f"{self.temp_dir}/{path_cj_a.stem}.subset.json"],
                 shell=True)
             subprocess.run([
-                f"cjio {path_cj_b} subset  $(cat {self.changed_temp}) save " +
+                f"cjio {path_cj_b} subset --exclude $(cat {self.changed_temp}) save " +
                 f"{self.temp_dir}/{path_cj_b.stem}.subset.json"],
                 shell=True)
 
