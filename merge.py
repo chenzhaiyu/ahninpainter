@@ -23,7 +23,9 @@ class CityModelMerger:
 
         self.prefix_ahn4 = kwargs['prefix_ahn4']
         self.prefix_ahn34 = kwargs['prefix_ahn34']
+
         self.do_append_id = kwargs['do_append_id']
+        self.do_suppress_cjio = kwargs['do_suppress_cjio']
 
         self.changed_ids = kwargs['changed_ids']
         self.changed_temp = kwargs['changed_temp']
@@ -57,26 +59,43 @@ class CityModelMerger:
         :return: None
         """
         path_cj_a, path_cj_b = args
-        subprocess.run([
-            f"cjio {path_cj_a} subset --exclude $(cat {self.changed_temp}) save " +
-            f"{self.temp_dir}/{path_cj_a.stem}.subset.json"],
-            shell=True)
-        subprocess.run([
-            f"cjio {path_cj_b} subset  $(cat {self.changed_temp}) save " +
-            f"{self.temp_dir}/{path_cj_b.stem}.subset.json"],
-            shell=True)
+
+        if self.do_suppress_cjio:
+            subprocess.run([
+                f"cjio {path_cj_a} subset --exclude $(cat {self.changed_temp}) save " +
+                f"{self.temp_dir}/{path_cj_a.stem}.subset.json"],
+                shell=True, stdout=subprocess.DEVNULL)
+            subprocess.run([
+                f"cjio {path_cj_b} subset  $(cat {self.changed_temp}) save " +
+                f"{self.temp_dir}/{path_cj_b.stem}.subset.json"],
+                shell=True, stdout=subprocess.DEVNULL)
+
+        else:
+            subprocess.run([
+                f"cjio {path_cj_a} subset --exclude $(cat {self.changed_temp}) save " +
+                f"{self.temp_dir}/{path_cj_a.stem}.subset.json"],
+                shell=True)
+            subprocess.run([
+                f"cjio {path_cj_b} subset  $(cat {self.changed_temp}) save " +
+                f"{self.temp_dir}/{path_cj_b.stem}.subset.json"],
+                shell=True)
 
     def merge(self, args):
         """
         :param args: ({path_cj_a}_subset.json, {path_cj_b}_subset.json)
         Merge the two subsets.
         """
-        path_cj_a, path_cj_b = Path(self.temp_dir) / args[0].with_suffix('.subset.json').name, args[1].with_suffix(
-            '.subset.json').name
+        path_cj_a, path_cj_b = Path(self.temp_dir) / args[0].with_suffix('.subset.json').name, Path(self.temp_dir) / \
+                               args[1].with_suffix('.subset.json').name
         path_cj_out = (Path(self.output_dir) / self.get_tile_number(path_cj_a)).with_suffix('.json')
 
         path_cj_out.parent.mkdir(exist_ok=True)
-        subprocess.run(f"cjio {path_cj_a} merge {path_cj_b} save {path_cj_out}", shell=True)
+
+        if self.do_suppress_cjio:
+            subprocess.run(f"cjio {path_cj_a} merge {path_cj_b} save {path_cj_out}", shell=True,
+                           stdout=subprocess.DEVNULL)
+        else:
+            subprocess.run(f"cjio {path_cj_a} merge {path_cj_b} save {path_cj_out}", shell=True)
 
 
 @hydra.main(config_path='conf', config_name='config')
@@ -107,10 +126,10 @@ def multi_run(cfg: DictConfig):
         merger.append_id()
 
     # https://stackoverflow.com/a/40133278
-    for r in tqdm(pool.imap_unordered(merger.subset, args), total=len(args)):
+    for r in tqdm(pool.imap_unordered(merger.subset, args), total=len(args), desc='subset'):
         pass
 
-    for r in tqdm(pool.imap_unordered(merger.merge, args), total=len(args)):
+    for r in tqdm(pool.imap_unordered(merger.merge, args), total=len(args), desc='merge'):
         pass
 
 

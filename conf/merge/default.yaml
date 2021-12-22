@@ -8,6 +8,7 @@ prefix_ahn4: 'ahn4_'
 prefix_ahn34: 'ahn34_'
 
 do_append_id: true
+do_suppress_cjio: true
 
 changed_ids: '/Users/zhaiyu/Workspace/inpaint-utils/data/merge/changed.txt'
 changed_temp: ${merge.temp_dir}/changed.txt
