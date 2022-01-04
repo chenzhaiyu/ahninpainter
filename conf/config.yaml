@@ -5,6 +5,7 @@ defaults:
   - mask: default
   - split: default
   - merge: default
+  - overlay: default
 
   - device: macbook
 
