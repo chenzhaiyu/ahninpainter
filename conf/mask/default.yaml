@@ -1,3 +1,3 @@
 
-input_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all'
-output_dir: '/Users/zhaiyu/Datasets/temp'
+input_dir: '/Users/zhaiyu/Downloads/ahn4_ams_res25cm50cm_trainvaltest/test'
+output_dir: '/Users/zhaiyu/Downloads/ahn4_ams_res25cm50cm_trainvaltest/masks'

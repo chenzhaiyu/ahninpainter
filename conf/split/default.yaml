@@ -1,6 +1,6 @@
-input_dir: '/Users/zhaiyu/Datasets/inpaint/ahn4/tif_all'
-output_dir: '/Users/zhaiyu/Datasets/temp'
+input_dir: '/Users/zhaiyu/Downloads/ahn4_ams_res25cm50cm'
+output_dir: '/Users/zhaiyu/Downloads/ahn4_ams_res25cm50cm_trainvaltest'
 suffix: '.tif'
 train: []  # remaining tiles from validation if empty
-val: [5907, 5908, 5909, 5910, 6211, 6212, 6213, 6214, 6307, 6308, 6309, 6310, 7199, 7200, 7201, 7202]
+val: [335, 1609, 1629, 1658, 4221, 4228, 4268, 4282, 4298, 4343, 4365, 7099, 7112, 7185, 7200, 7222, 7248]
 test: null  # all buildings with no-data pixels

@@ -51,8 +51,8 @@ def multi_run(cfg: DictConfig):
 
     args = [(path, cfg) for path in input_paths]
 
-    if cfg.split.threads > 1:
-        pool = multiprocessing.Pool(processes=cfg.split.threads)
+    if cfg.threads > 1:
+        pool = multiprocessing.Pool(processes=cfg.threads)
         # https://stackoverflow.com/a/40133278
         for _ in tqdm(pool.imap_unordered(run, args), total=len(args)):
             pass
