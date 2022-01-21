@@ -14,8 +14,16 @@ from PIL import Image
 def nodata(image):
     """
     Return no-data flag, and mask of no-data pixels, if any.
-    :param image: gdal image
-    :return: whether given image has no-data pixels
+
+    Parameters
+    ----------
+    image: GDAL image
+        Input image
+
+    Returns
+    -------
+    has_nodata: bool
+        If the image contains no-data pixels
     """
     band = image.GetRasterBand(1)
     value = band.GetNoDataValue()

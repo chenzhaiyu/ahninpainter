@@ -1,0 +1,6 @@
+[submodule "networks/dfnet"]
+	path = networks/dfnet
+	url = https://github.com/chenzhaiyu/dfnet
+[submodule "networks/glcic"]
+	path = networks/glcic
+	url = https://github.com/chenzhaiyu/glcic
