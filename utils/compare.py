@@ -224,11 +224,18 @@ def multi_run(cfg: DictConfig):
     reference_dir = Path(cfg.compare.reference_tif_dir)
     target_dir = Path(cfg.compare.target_tif_dir)
     reference_paths = reference_dir.rglob('*' + 'tif')
+    target_paths = target_dir.rglob('*' + 'tif')
 
     args = []
     for path_reference in reference_paths:
         path_target = target_dir / path_reference.relative_to(reference_dir).with_suffix('.tif')
         args.append((path_reference, path_target))
+
+    # for buildings that only exists since AHN 4: directly considered changed
+    targets_only = []
+    for path_target in target_paths:
+        if path_target not in [arg[1] for arg in args]:
+            targets_only.append(path_target.stem)
 
     pool = multiprocessing.Pool(processes=cfg.threads if cfg.threads else multiprocessing.cpu_count())
 
@@ -251,6 +258,12 @@ def multi_run(cfg: DictConfig):
             else:
                 log.error(f'Unexpected error: {r[-1]}')
                 raise ValueError
+        for target_only in targets_only:
+            log.debug(f'Changed (new): {target_only}')
+            file_changed.write(target_only)
+            file_changed.write('\n')
+            counter += 1
+
         log.info(f' {counter} / {len(args)} has changed.')
 
 
