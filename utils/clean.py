@@ -1,5 +1,7 @@
 """
 Clean invalid images.
+
+Invalid images are those with size 1*1.
 """
 
 from pathlib import Path
@@ -15,8 +17,11 @@ from tqdm import tqdm
 def clean_image(path):
     """
     Clean one invalid image (1x1).
-    :param path: path to image
-    :return: None
+
+    Parameters
+    ----------
+    path: Path
+        Path to image
     """
     image = gdal.Open(str(path))
     if image.RasterXSize == 1 and image.RasterYSize == 1:
@@ -31,7 +36,11 @@ def clean_image(path):
 def multi_run(cfg: DictConfig):
     """
     CLean images with multi-processing.
-    :return: None
+
+    Parameters
+    ----------
+    cfg: DictConfig
+        Hydra config
     """
     input_dir = Path(cfg.clean.input_dir)
     input_paths = list(input_dir.rglob('*' + 'tif'))

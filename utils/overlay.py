@@ -8,7 +8,6 @@ import logging
 
 from tqdm import tqdm
 from omegaconf import DictConfig
-from hydra.utils import instantiate
 import hydra
 from osgeo import gdal
 
@@ -19,7 +18,11 @@ log = logging.getLogger(__name__)
 def overlay(args):
     """
     Overlay two raster (in order).
-    :return: None
+
+    Parameters
+    ----------
+    args: (str, str, str)
+        Path to low-res raster, path to high-res raster, path to output raster
     """
     path_low, path_high, path_out = args
     path_out.parent.mkdir(exist_ok=True, parents=True)
@@ -30,9 +33,12 @@ def overlay(args):
 def multi_run(cfg: DictConfig):
     """
     Overlay low-res and high-res with multi-processing.
-    :return: None
-    """
 
+    Parameters
+    ----------
+    cfg: DictConfig
+        Hydra config
+    """
     dir_low = Path(cfg.overlay.dir_low)
     dir_high = Path(cfg.overlay.dir_high)
     dir_out = Path(cfg.overlay.dir_output)
@@ -52,4 +58,3 @@ def multi_run(cfg: DictConfig):
 
 if __name__ == '__main__':
     multi_run()
-

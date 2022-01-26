@@ -1,5 +1,10 @@
 """
-Combine AHN 3/4 CityJSON models.
+Merge AHN 3/4 CityJSON models.
+
+City models from AHN 3/4 are first subset into two non-overlapping sets
+ based on the change status evaluated by compare.py, then merged to form
+ completed, up-to-date city models. cjio (https://github.com/cityjson/cjio)
+ is used for manipulation of CityJSON files.
 """
 
 import subprocess
@@ -16,6 +21,9 @@ log = logging.getLogger(__name__)
 
 
 class CityModelMerger:
+    """
+    City model merger.
+    """
     def __init__(self, **kwargs):
         self.data_dir = kwargs['data_dir']
         self.temp_dir = kwargs['temp_dir']
@@ -46,8 +54,17 @@ class CityModelMerger:
     @staticmethod
     def get_tile_number(filepath):
         """
-        :param filepath: Path-like filepath
-        :return: tile number
+        Get tile number from filename.
+
+        Parameters
+        ----------
+        filepath: Path
+            Filepath
+
+        Returns
+        -------
+        return: str
+            Tile number
         """
         stem = filepath.stem
         return stem.split('_')[-1]
@@ -55,8 +72,11 @@ class CityModelMerger:
     def subset(self, args):
         """
         Subset CityObjects in CityJSON files.
-        :param args: (fused AHN (when unchanged), AHN 4 (when changed))
-        :return: None
+
+        Parameters
+        ----------
+        args: (str, str)
+            (fused AHN (when unchanged), AHN 4 (when changed))
         """
         path_cj_a, path_cj_b = args
 
@@ -82,8 +102,12 @@ class CityModelMerger:
 
     def merge(self, args):
         """
-        :param args: ({path_cj_a}_subset.json, {path_cj_b}_subset.json)
-        Merge the two subsets.
+        Merge two city subsets (cityjson files).
+
+        Parameters
+        ----------
+        args: (str, str)
+            ({path_cj_a}_subset.json, {path_cj_b}_subset.json)
         """
         path_cj_a, path_cj_b = Path(self.temp_dir) / args[0].with_suffix('.subset.json').name, Path(self.temp_dir) / \
                                args[1].with_suffix('.subset.json').name
@@ -102,9 +126,12 @@ class CityModelMerger:
 def multi_run(cfg: DictConfig):
     """
     Merge AHN 3/4 with multi-processing.
-    :return: None
-    """
 
+    Parameters
+    ----------
+    cfg: DictConfig
+        Hydra config
+    """
     data_dir = Path(cfg.merge.data_dir)
     ahn4_paths = data_dir.rglob(f'{cfg.merge.prefix_ahn4}*' + '.json')
 

@@ -1,5 +1,8 @@
 """
-Compare AHN 3/4 raster.
+Compare AHN 3/4 raster for change detection.
+
+A building is considered changed from AHN 3 to AHN 4
+if the raster differs significantly between the two.
 """
 
 import multiprocessing
@@ -18,6 +21,9 @@ log = logging.getLogger(__name__)
 
 
 class RasterComparison:
+    """
+    Raster comparison between AHN 3/4.
+    """
     def __init__(self, **kwargs):
         self.reference_tif_dir = kwargs['reference_tif_dir']
         self.target_tif_dir = kwargs['target_tif_dir']
@@ -37,9 +43,18 @@ class RasterComparison:
         """
         Compute pixel-wise absolute difference between two raster.
         No-data pixels are ignored.
-        :param path_reference: path to reference raster
-        :param path_target: path to target raster
-        :return: difference
+
+        Parameters
+        ----------
+        path_reference: Path
+            Path to reference raster
+        path_target: Path
+            Path to target raster
+
+        Returns
+        -------
+        difference: None or (m, n) float
+            Pixel-wise difference array, or None if no matching
         """
         reference = gdal.Open(str(path_reference))
         if path_target.is_file():
@@ -76,8 +91,24 @@ class RasterComparison:
     def changed(self, difference_array):
         """
         Verdict if the building is changed.
-        :param difference_array: array of difference
-        :return: True/False
+
+        Multiple metrics are available upon specification in config:
+            * mean: mean per-pixel difference
+            * maxima: maxima per-pixel difference
+            * sum: sum of the differences
+            * count_larger_than: count of height-differed pixels
+            * percentage_larger_than: percentage of height-differed pixels.
+        If the variation(s) are less than the specified threshold then the building is considered changed.
+
+        Parameters
+        ----------
+        difference_array: (m, n) float
+            Difference array
+
+        Returns
+        -------
+        changed_: None or bool
+            Whether the building is changed, or None if no matching
         """
         changed_ = {}
         if difference_array is None:
@@ -97,15 +128,22 @@ class RasterComparison:
         if 'percentage_larger_than' in self.metrics:
             percentage_larger_than = np.sum(
                 difference_array > self.metrics['percentage_larger_than'][0]) / difference_array.size
-            changed_['percentage_larger_than'] = True if percentage_larger_than > \
-                                                         self.metrics['percentage_larger_than'][
-                                                             1] else False
+            changed_['percentage_larger_than'] = True if \
+                percentage_larger_than > self.metrics['percentage_larger_than'][1] else False
         return changed_
 
     def copy_file(self, path_reference, path_target, filetype):
         """
         Copy reference and target to specified dir if they are changed.
-        :return: None
+
+        Parameters
+        ----------
+        path_reference: Path
+            Path to reference file
+        path_target: Path
+            Path to target file
+        filetype: str
+            Type of files to copy, can be 'tif' or 'las'
         """
         # create dir structure as tile_number/raster_number
         stem = path_reference.relative_to(self.reference_tif_dir)
@@ -135,9 +173,25 @@ class RasterComparison:
 
     def compare(self, args):
         """
-        Compare reference and target.
-        :param args: path_reference, path_target
-        :return: whether the building is changed
+        Compare reference and target to conclude if it is changed.
+
+        Parameters
+        ----------
+        args: (Path, Path)
+            (path_reference, path_target)
+
+        Returns
+        -------
+        as_int: int {-1, 0, 1}
+            Whether the building is changed
+            -1: No matching
+             0: Not changed
+             1: Changed
+
+        changed_: None or (m, n) float
+            Changed metrics, or None if no matching
+        path_reference.stem: str
+            Filename stem
         """
         path_reference, path_target = args
         difference_array = self.difference(path_reference, path_target)
@@ -161,7 +215,11 @@ class RasterComparison:
 def multi_run(cfg: DictConfig):
     """
     Compare the difference with multi-processing.
-    :return: None
+
+    Parameters
+    ----------
+    cfg: DictConfig
+        Hydra config
     """
     reference_dir = Path(cfg.compare.reference_tif_dir)
     target_dir = Path(cfg.compare.target_tif_dir)

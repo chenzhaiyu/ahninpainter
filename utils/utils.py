@@ -39,16 +39,27 @@ def convert_image(input_path, output_path, suffix='.jpg', backend='gdal', n_chan
                   min_value=None, max_value=None, exclude_nodata=False, mode='I;16'):
     """
     Convert images to a specified format.
-    :param mode: image mode if as greyscale, support backend pillow only
-    :param input_path: path to input image
-    :param output_path: path to output image
-    :param suffix: 'jpg'
-    :param backend: 'pillow' or 'gdal'
-    :param n_channels: number of channels to output
-    :param min_value: min value to scale to
-    :param max_value: max value to scale to
-    :param exclude_nodata: exclude images with no-data pixels if set True
-    :return: None
+
+    Parameters
+    ----------
+    mode: str
+        Image mode if as greyscale, support backend pillow only
+    input_path: str
+        Path to input image
+    output_path: str
+        Path to output image
+    suffix: str
+        Suffix of filetype to convert to, 'jpg' supported
+    backend: str
+        Backend of conversion, 'pillow' or 'gdal'
+    n_channels: int
+        Number of channels to output
+    min_value: None or int
+        Min value to scale to
+    max_value: None or int
+        Max value to scale to
+    exclude_nodata: bool
+        exclude images with no-data pixels if set True
     """
     assert suffix == ".jpg" or suffix == ".jpeg" or suffix == ".png"
     if exclude_nodata and backend != 'gdal':
@@ -94,9 +105,16 @@ def convert_image(input_path, output_path, suffix='.jpg', backend='gdal', n_chan
 def glob_tile_ids(pattern):
     """
     Get available tile folders.
-    :param pattern: pattern path to search for
-    :return: list of available file paths
+
+    Parameters
+    ----------
+    pattern: str
+        Pattern path to search for
+
+    Returns
+    -------
+    as_list: list[Path]
+        list of available file paths
     """
     tile_ids = glob.glob(pattern)
     return [Path(i).stem for i in tile_ids]
-

@@ -17,6 +17,11 @@ from utils import nodata
 def run(args):
     """
     One single run on one thread.
+
+    Parameters
+    ----------
+    args: (str, DictConfig)
+        Input path, hydra config
     """
     input_path, cfg = args
     input_dir = Path(cfg.split.input_dir)
@@ -45,6 +50,11 @@ def run(args):
 def multi_run(cfg: DictConfig):
     """
     Split data into train/val/test.
+
+    Parameters
+    ----------
+    cfg: DictConfig
+        Hydra config
     """
     input_dir = Path(cfg.split.input_dir)
     input_paths = input_dir.rglob('*' + cfg.split.suffix)

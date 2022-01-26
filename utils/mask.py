@@ -1,3 +1,7 @@
+"""
+Create mask from raster with no-data pixels.
+"""
+
 import multiprocessing
 from pathlib import Path
 
@@ -13,8 +17,11 @@ from utils import nodata
 def extract_mask(args):
     """
     Extract mask from nodata (test) image.
-    :param args: image path and save path
-    :return: None
+
+    Parameters
+    ----------
+    args: (str, str)
+        image path and save path
     """
     path_in, path_out = args
     image = gdal.Open(str(path_in))
@@ -27,7 +34,11 @@ def extract_mask(args):
 def multi_run(cfg: DictConfig):
     """
     Extract masks from no-data images with multi-processing.
-    :return: None
+
+    Parameters
+    ----------
+    cfg: DictConfig
+        Hydra config
     """
     input_dir = Path(cfg.mask.input_dir)
     output_dir = Path(cfg.mask.output_dir)

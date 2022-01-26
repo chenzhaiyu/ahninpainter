@@ -1,6 +1,11 @@
+"""
+Download AHN 4 data via public URL.
+"""
+
 import os
 from pathlib import Path
 import wget
+
 from tqdm import tqdm
 import ssl
 import urllib
@@ -9,10 +14,15 @@ import urllib
 def download_ahn(save_dir='./', tiles_path='conf/tilenames.txt', url_base='https://ns_hwh.fundaments.nl/hwh-ahn/ahn4/01_LAZ/'):
     """
     Download AHN4 point clouds.
-    :param url_base: remote url base
-    :param save_dir: where to save the data
-    :param tiles_path: file of tile names
-    :return: None
+
+    Parameters
+    ----------
+    url_base: str
+        Remote url base
+    save_dir: str
+        Path to save the data
+    tiles_path: str
+        Path to save tile names
     """
 
     save_dir = Path(save_dir)

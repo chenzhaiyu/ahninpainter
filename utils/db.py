@@ -1,21 +1,22 @@
 """
 Data retrieval from PostGIS database.
+
 Footprints and corresponding point clouds are downloaded within given ROI.
 """
 
-from pathlib import Path
 import os
 import subprocess
+import logging
+from itertools import chain
+from pathlib import Path
 
 import fiona
 import psycopg2
 import json
-
 from shapely import wkt as wkt_func
 from shapely.geometry import mapping
 from tqdm import tqdm
-from itertools import chain
-import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,9 @@ DEBUG = True
 
 
 class DBExplorer:
+    """
+    Database handler.
+    """
     def __init__(self, dsn, local_dir):
         self.dsn = dsn
         self.local_dir = Path(local_dir)
@@ -43,7 +47,6 @@ class DBExplorer:
     def _connect_db(self):
         """
         Open connection to DB.
-        :return: None
         """
         if self.connection and self.connection.closed == 0:
             return
@@ -57,10 +60,20 @@ class DBExplorer:
     def _get_wkt(self, identificatie, table="bag3d_v21031_7425c21b", attribute="pand"):
         """
         Get wkt polygon from identificatie.
-        :param identificatie: identificatie of building instance
-        :param table: table name
-        :param attribute: attribute name
-        :return: wkt polygon
+
+        Parameters
+        ----------
+        identificatie: str
+            Identificatie of building instance
+        table: str
+            Table name
+        attribute: str
+            Attribute name
+
+        Returns
+        -------
+        as_str: str
+            WKT polygon
         """
         # cached wkt for known identificaties
         if identificatie in self.wkts:
@@ -76,11 +89,17 @@ class DBExplorer:
     def get_identificaties(self, roi, table="bag3d_v21031_7425c21b", attribute="pand", srs=28992):
         """
         Get building identificaties within an ROI
-        :param roi: polygon region of interests
-        :param table: schema name
-        :param attribute: attribute name
-        :param srs: reference system
-        :return: identificaties
+
+        Parameters
+        ----------
+        roi: str
+            Polygon region of interests
+        table: str
+            Schema name
+        attribute: str
+            Attribute name
+        srs: int
+            reference system
         """
         # query NL.IMBAG.Pand. within Amsterdam area
         with self.connection.cursor() as cursor:
@@ -95,9 +114,13 @@ class DBExplorer:
     def _wkt_to_gpkg(wkt_list, gpkg_file):
         """
         Convert wkt to gpkg.
-        :param wkt_list: list of wkt
-        :param gpkg_file: gpkg file
-        :return: None
+
+        Parameters
+        ----------
+        wkt_list: list[str]
+            List of wkt
+        gpkg_file: str
+            Path to gpkg file
         """
         # define a linestring feature geometry with one attribute
         schema = {
@@ -117,7 +140,6 @@ class DBExplorer:
     def _write_gkpg(self):
         """
         Write footprints into geopackage files.
-        :return: None
         """
         assert self.identificaties
         for identificatie in self.identificaties:
@@ -134,9 +156,13 @@ class DBExplorer:
     def _get_tile_ids(self, table="ahn3", attribute="tiles_200m"):
         """
         Get tile ids.
-        :param table: schema name
-        :param attribute: attribute name
-        :return: None
+
+        Parameters
+        ----------
+        table: str
+            Table name
+        attribute: str
+            attribute name
         """
         for identificatie in tqdm(self.identificaties):
             wkt = self._get_wkt(identificatie)
@@ -151,8 +177,11 @@ class DBExplorer:
     def write_tiles(self, filepath):
         """
         Write tiles mapping into a json file.
-        :param filepath: path to save json file
-        :return: None
+
+        Parameters
+        ----------
+        filepath: str
+            Path to save json file
         """
         with open(filepath, 'w') as f:
             json.dump(self.tiles, f)
@@ -161,14 +190,17 @@ class DBExplorer:
     def _laz_paths(self, prefix="godzilla:/data/pointcloud/AHN4/tiles_200m/t_{", suffix="}.laz"):
         """
         Retuen paths to raw laz files on server.
-        :return: laz paths
+
+        Parameters
+        ----------
+        prefix: str
+            Prefix to LAZ paths
         """
         return f"{prefix}" + ','.join(chain.from_iterable(self.tiles.values())) + f"{suffix}"
 
     def download_footprints(self):
         """
         Download footprint given identificaties.
-        :return: None
         """
         self._get_tile_ids()
         self._write_gkpg()
@@ -176,9 +208,13 @@ class DBExplorer:
     def download_pointclouds(self, temp_dir="./temp", remove_raw=True):
         """
         Download point clouds given identificaties.
-        :param temp_dir: temp dir to save raw laz tiles (to be merged)
-        :param remove_raw: remove downloaded raw laz tiles if set True
-        :return: None
+
+        Parameters
+        ----------
+        temp_dir: str
+            Temp dir to save raw laz tiles (to be merged)
+        remove_raw: bool
+            Remove downloaded raw laz tiles if set True
         """
         # rsync only once for all laz files (authorisation)
         laz_dir = self.local_dir / temp_dir
@@ -211,6 +247,9 @@ class DBExplorer:
 
 
 def run_godzilla():
+    """
+    Run data retrieval from https://godzilla.bk.tudelft.nl/.
+    """
     host = "localhost"
     port = 5432
     dbname = "baseregisters"

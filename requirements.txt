@@ -1,0 +1,6 @@
+numpy
+GDAL
+tqdm
+hydra-core
+omegaconf
+pillow
