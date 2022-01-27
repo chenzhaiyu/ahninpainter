@@ -235,7 +235,6 @@ def multi_run(cfg: DictConfig):
     targets_only = []
     targets_match = {arg[1] for arg in args}
     for path_target in target_paths:
-        if path_target not in [arg[1] for arg in args]:
         if path_target not in targets_match:
             targets_only.append(path_target.stem)
 
