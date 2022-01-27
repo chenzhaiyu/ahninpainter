@@ -233,8 +233,10 @@ def multi_run(cfg: DictConfig):
 
     # for buildings that only exists since AHN 4: directly considered changed
     targets_only = []
+    targets_match = {arg[1] for arg in args}
     for path_target in target_paths:
         if path_target not in [arg[1] for arg in args]:
+        if path_target not in targets_match:
             targets_only.append(path_target.stem)
 
     pool = multiprocessing.Pool(processes=cfg.threads if cfg.threads else multiprocessing.cpu_count())
@@ -258,6 +260,7 @@ def multi_run(cfg: DictConfig):
             else:
                 log.error(f'Unexpected error: {r[-1]}')
                 raise ValueError
+        log.info(f'New buildings: {len(targets_only)}')
         for target_only in targets_only:
             log.debug(f'Changed (new): {target_only}')
             file_changed.write(target_only)
