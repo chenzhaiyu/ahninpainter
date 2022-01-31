@@ -211,7 +211,7 @@ class RasterComparison:
             return 0, None, path_reference.stem
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path='../conf', config_name='config')
 def multi_run(cfg: DictConfig):
     """
     Compare the difference with multi-processing.

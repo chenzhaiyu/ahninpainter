@@ -4,10 +4,10 @@ General utility functions.
 
 import glob
 import warnings
+from pathlib import Path
 
 import numpy as np
 from osgeo import gdal
-from pathlib import Path
 from PIL import Image
 
 

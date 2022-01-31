@@ -16,6 +16,8 @@ import json
 from shapely import wkt as wkt_func
 from shapely.geometry import mapping
 from tqdm import tqdm
+from omegaconf import DictConfig
+import hydra
 
 
 logger = logging.getLogger(__name__)
@@ -246,14 +248,16 @@ class DBExplorer:
             shutil.rmtree(laz_dir)
 
 
-def run_godzilla():
+@hydra.main(config_path='../conf', config_name='config')
+def run_godzilla(cfg: DictConfig):
     """
     Run data retrieval from https://godzilla.bk.tudelft.nl/.
     """
-    host = "localhost"
-    port = 5432
-    dbname = "baseregisters"
-    local_dir = "./data"
+    host = cfg.db.host
+    port = cfg.db.port
+    dbname = cfg.db.name
+    local_dir = cfg.db.local_dir
+    roi = cfg.db.roi
 
     logger.info(f"connecting to database {dbname} on {host}:{port}")
 
@@ -262,8 +266,7 @@ def run_godzilla():
 
     db_explorer = DBExplorer(dsn=f"host={host} port={port} dbname={dbname} user={user} password={password}",
                              local_dir=f"{local_dir}")
-    db_explorer.get_identificaties(roi='POLYGON((110000 494000,110000 474300,131000 474300,131000 494000,110000 '
-                                       '494000))')  # Amsterdam region
+    db_explorer.get_identificaties(roi=roi)
     db_explorer.download_footprints()
     db_explorer.download_pointclouds()
 

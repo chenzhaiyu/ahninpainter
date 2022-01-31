@@ -11,7 +11,7 @@ from osgeo import gdal
 import hydra
 from omegaconf import DictConfig
 
-from utils import nodata
+from _utils import nodata
 
 
 def run(args):
@@ -46,7 +46,7 @@ def run(args):
     subprocess.run(["rsync"] + [str(input_path)] + [str(output_path)])
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path='../conf', config_name='config')
 def multi_run(cfg: DictConfig):
     """
     Split data into train/val/test.

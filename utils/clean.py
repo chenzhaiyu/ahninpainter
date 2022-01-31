@@ -32,7 +32,7 @@ def clean_image(path):
             pass
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path='../conf', config_name='config')
 def multi_run(cfg: DictConfig):
     """
     CLean images with multi-processing.

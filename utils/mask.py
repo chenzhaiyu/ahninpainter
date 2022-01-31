@@ -11,7 +11,7 @@ from osgeo import gdal
 import hydra
 from omegaconf import DictConfig
 
-from utils import nodata
+from _utils import nodata
 
 
 def extract_mask(args):
@@ -30,7 +30,7 @@ def extract_mask(args):
         Image.fromarray(mask_nodata).save(path_out)
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path='../conf', config_name='config')
 def multi_run(cfg: DictConfig):
     """
     Extract masks from no-data images with multi-processing.

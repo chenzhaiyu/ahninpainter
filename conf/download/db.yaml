@@ -1,5 +1,0 @@
-host: 'localhost'
-port: 5432
-name: 'baseregisters'
-ahn_table: 'ahn3'
-bag_table: 'bag3d_v21031_7425c21b'

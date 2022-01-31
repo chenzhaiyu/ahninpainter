@@ -9,32 +9,38 @@ import wget
 from tqdm import tqdm
 import ssl
 import urllib
+from omegaconf import DictConfig
+import hydra
 
 
-def download_ahn(save_dir='./', tiles_path='conf/tilenames.txt', url_base='https://ns_hwh.fundaments.nl/hwh-ahn/ahn4/01_LAZ/'):
+@hydra.main(config_path='../conf', config_name='config')
+def download_ahn(cfg: DictConfig):
     """
     Download AHN4 point clouds.
 
     Parameters
     ----------
-    url_base: str
-        Remote url base
-    save_dir: str
-        Path to save the data
-    tiles_path: str
-        Path to save tile names
+    cfg: DictConfig
+        url_base: str
+            Remote url base
+        save_dir: str
+            Path to save the data
+        tiles_path: str
+            Path to save tile names
     """
 
-    save_dir = Path(save_dir)
-    tiles_path = Path(tiles_path)
+    save_dir = Path(hydra.utils.to_absolute_path(cfg.db.local_dir))
+    tiles_path = cfg.db.tilenames
+    url_base = cfg.db.url_ahn
 
     # disable ssl certificate
     if not os.environ.get('PYTHONHTTPSVERIFY', '') and getattr(ssl, '_create_unverified_context', None):
         ssl._create_default_https_context = ssl._create_unverified_context
 
-    with open(tiles_path) as filenames:
+    with open(hydra.utils.to_absolute_path(tiles_path)) as filenames:
         tile_names = filenames.readlines()
 
+    save_dir.mkdir(exist_ok=True, parents=True)
     os.chdir(save_dir)
 
     tile_names_existing = []
@@ -58,4 +64,4 @@ def download_ahn(save_dir='./', tiles_path='conf/tilenames.txt', url_base='https
 
 
 if __name__ == '__main__':
-    download_ahn(save_dir='./')
+    download_ahn()

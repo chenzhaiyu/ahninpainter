@@ -1,0 +1,9 @@
+host: 'localhost'
+port: 5432
+name: 'baseregisters'
+ahn_table: 'ahn3'
+bag_table: 'bag3d_v21031_7425c21b'
+
+roi: 'POLYGON((110000 494000,110000 474300,131000 474300,131000 494000,110000 494000))'  # Amsterdam region
+
+local_dir: './data'

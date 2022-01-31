@@ -29,7 +29,7 @@ def overlay(args):
     gdal.Warp(str(path_out), [str(path_low), str(path_high)], format='GTiff')
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path='../conf', config_name='config')
 def multi_run(cfg: DictConfig):
     """
     Overlay low-res and high-res with multi-processing.

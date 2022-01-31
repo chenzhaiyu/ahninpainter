@@ -122,7 +122,7 @@ class CityModelMerger:
             subprocess.run(f"cjio {path_cj_a} merge {path_cj_b} save {path_cj_out}", shell=True)
 
 
-@hydra.main(config_path='conf', config_name='config')
+@hydra.main(config_path='../conf', config_name='config')
 def multi_run(cfg: DictConfig):
     """
     Merge AHN 3/4 with multi-processing.
