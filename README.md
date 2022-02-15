@@ -124,7 +124,7 @@ In `geof.toml` there are a few rasterisation options:
 
 ```toml
 CELLSIZE=0.50     # cellsize (m) of each pixel
-USE_TIN=false      # whether to enable TIN interpolation to reduce gaps
+USE_TIN=false     # whether to enable TIN interpolation to reduce gaps
 L=0.0             # largest triangle length if TIN is enabled
 USE_GROUND_POINTS=true  # whether to include ground points
 ```
@@ -133,12 +133,30 @@ USE_GROUND_POINTS=true  # whether to include ground points
 
 1. Overlay raster of different resolution:
 
+To facilitate high-quality training data that entails both completeness and high resolution, two rasters of different resolution/completeness from the same building are overlaid.
+
+Create `geof.toml` for high-resolution raster:
+
+```toml
+CELLSIZE=0.25
+USE_TIN=true
+L=2.0
+USE_GROUND_POINTS=true
+```
+
+Create `geof.toml` for low-resolution raster:
+
+```toml
+CELLSIZE=0.50
+USE_TIN=false
+L=0.0
+USE_GROUND_POINTS=true
+```
+
 ```bash
 # configuration at conf/overlay
 python utils/overlay.py
 ```
-
-To facilitate high-quality training data that entails both completeness and high resolution, two rasters of different resolution/completeness from the same building are overlaid.
 
 ![overlay](./docs/overlay.png)
 
@@ -190,3 +208,4 @@ python utils/merge.py
 ```
 
 In addition, `db.py` and `download.py` provide data retrieval methods from a database or via a public URL.
+
