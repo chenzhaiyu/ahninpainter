@@ -34,23 +34,20 @@ Refer to `networks/{submodules}` for additional requirements to run respective n
 
 There are self-contained Python files under `utils`, with their respective configurations under `conf`. 
 
+```bash
+clean.py      # Clean invalid raster
+compare.py    # Compare AHN 3/4 raster
+db.py         # Retrieve footprint and point clouds from PostGIS database
+download.py   # Download AHN 4 data
+mask.py       # Create mask from raster with no-data pixels
+merge.py      # Merge AHN 3/4 CityJSON models
+overlay.py    # Overlay low-res and high-res raster
+split.py      # Split data into train/val/test sets
+utils.py      # General utilities
 ```
-clean.py      Clean invalid raster
-compare.py    Compare AHN 3/4 raster
-db.py         Retrieve footprint and point clouds from PostGIS database
-download.py   Download AHN 4 data
-mask.py       Create mask from raster with no-data pixels
-merge.py      Merge AHN 3/4 CityJSON models
-overlay.py    Overlay low-res and high-res raster
-split.py      Split data into train/val/test sets
-utils.py      General utilities
-```
 
-Navigate to `networks/{submodules}` for usages for respective neural networks.
-
-## Get started
-
-### Rasterise point clouds
+<details><summary><b>Rasterise point clouds</b></summary>
+&nbsp;
 
 The point cloud of a building is rasterised into a GeoTIFF image where an intensity value represents the highest height value of the points that fall into the pixel. In case no points are associated with the pixel, a no-data value is assigned. In addition, the raster size is determined by the size of the footprint as well as the specified resolution. For ground pixels outside the footprint, monotonic estimated height values are assigned. 
 
@@ -128,10 +125,12 @@ USE_TIN=false     # whether to enable TIN interpolation to reduce gaps
 L=0.0             # largest triangle length if TIN is enabled
 USE_GROUND_POINTS=true  # whether to include ground points
 ```
+</details>
 
-### Prepare train/val/test data
+<details><summary><b>Prepare train/val/test set</b></summary>
+&nbsp;
 
-1. Overlay raster of different resolution:
+- Overlay raster of different resolution:
 
 To facilitate high-quality training data that entails both completeness and high resolution, two rasters of different resolution/completeness from the same building are overlaid.
 
@@ -160,14 +159,14 @@ python utils/overlay.py
 
 ![overlay](./docs/overlay.png)
 
-2. Clean invalid 1x1 raster from the generated raster:
+- Clean invalid 1x1 raster from the generated raster:
 
 ```bash
 # configuration at conf/clean
 python utils/clean.py
 ```
 
-3. Split the data into train/val/test:
+- Split the data into train/val/test:
 
 ```bash
 # configuration at conf/split
@@ -176,22 +175,29 @@ python utils/split.py
 
 `train` and `val` sets only include complete rasters without no-data pixels, while `test` set only includes rasters with no-data pixels. The former two are used to train and evaluate the neural networks with known height reference, while the latter one acts as *wild* examples where no height reference is given.
 
-4. Extract mask from no-data (test) raster:
+- Extract mask from no-data (test) raster:
 
 ```bash
 # configuration at conf/mask
 python utils/mask.py
 ```
+</details>
 
-### Train the inpainting network(s)
+<details><summary><b>Train the inpainting network(s)</b></summary>
+&nbsp;
 
 Follow the `networks/{submodules}/README.md` for respective instructions to train the inpainting networks.
+</details>
 
-### Evaluate and convert rasters to point clouds
+
+<details><summary><b>Evaluate and convert rasters to point clouds</b></summary>
+&nbsp;
 
 The inpainting can be evaluated on examples with known height reference (i.e., `val`), or examples without height reference (i.e., `test` or the extrapolated).
+</details>
 
-### More
+<details><summary><b>Change detection and resolving</b></summary>
+&nbsp;
 
 With the [transition from AHN 3 to AHN 4](https://www.ahn.nl/ahn-4), a considerable amount of buildings have physically changed while others have not. A change detection pipeline is provided to compare the AHN 3/4 rasters: a building is considered changed from AHN 3 to AHN 4 if the raster differs significantly between the two:
 
@@ -206,6 +212,10 @@ With the change detection result, it is possible to merge two sets of city model
 # configuration at conf/merge
 python utils/merge.py
 ```
+</details>
 
-In addition, `db.py` and `download.py` provide data retrieval methods from a database or via a public URL.
+<details><summary><b>Data retrieval</b></summary>
+&nbsp;
 
+`db.py` and `download.py` provide data retrieval methods from a database or via a public URL.
+</details>
